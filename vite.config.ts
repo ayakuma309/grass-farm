@@ -1,21 +1,20 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+import { defineConfig } from "vite";
+import path from "path";
 
 export default defineConfig({
-  plugins: [vue()],
   build: {
     rollupOptions: {
       input: {
-        popup: resolve(__dirname, 'popup.html'),
-        content: resolve(__dirname, 'src/content.ts'), // 👈追加
+        content: path.resolve(__dirname, "src/content/grassColor.ts"),
+        cow: path.resolve(__dirname, "src/content/cow.ts"),
+        effects: path.resolve(__dirname, "src/content/effects.ts"),
       },
       output: {
-        entryFileNames: `[name].js`,
-        chunkFileNames: `[name].js`,
-        assetFileNames: `[name].[ext]`,
+        entryFileNames: "[name].js",
+        chunkFileNames: "[name].js",
+        assetFileNames: "[name].[ext]",
       },
     },
-    outDir: 'dist',
+    outDir: "dist",
   },
-})
+});

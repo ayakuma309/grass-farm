@@ -1,0 +1,34 @@
+import { getSeason, seasonGrassColors } from "../utils/season";
+
+console.log("🌿 GitHub Grass Color Changer loaded!");
+
+// 現在の季節を取得
+const currentSeason = getSeason();
+const seasonLevels = seasonGrassColors[currentSeason];
+
+function recolorGrass(): boolean {
+  const days = document.querySelectorAll('td.ContributionCalendar-day');
+  if (!days.length) {
+    console.log("⏳ 草がまだ見つからないので再試行します...");
+    return false;
+  }
+
+  let count = 0;
+  days.forEach((day) => {
+    const level = parseInt(day.getAttribute('data-level') ?? "0", 10);
+    if (level > 0) {
+      const color: string = seasonLevels[level] ?? seasonLevels[0]!;
+      (day as HTMLElement).style.backgroundColor = color;
+      count++;
+    }
+  });
+
+  console.log(`🌱 ${count} 個の草を ${currentSeason} カラーにしました！`);
+  return true;
+}
+
+// 要素が出るまで繰り返す
+const interval = setInterval(() => {
+  const success = recolorGrass();
+  if (success) clearInterval(interval);
+}, 1000);

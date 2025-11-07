@@ -1,25 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "GitHub Grass Color Changer",
-  "version": "1.0.0",
-  "description": "GitHubの草の色を変える拡張機能",
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
-    }
-  },
-  "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
-  },
+  "name": "Grass Farm",
+  "version": "1.0",
   "content_scripts": [
     {
       "matches": ["https://github.com/*"],
-      "js": ["content.js"]
+      "js": ["content.js", "cow.js", "effects.js"]
     }
   ]
 }
