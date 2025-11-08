@@ -1,13 +1,13 @@
 // 季節の型
-export type Season = 'spring' | 'summer' | 'autumn' | 'winter'
+export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
 // 現在の季節を判定する関数
 export function getSeason(): Season {
-  const month = new Date().getMonth() + 1 // 1月=1
-  if (month >= 3 && month <= 5) return 'spring'
-  if (month >= 6 && month <= 8) return 'summer'
-  if (month >= 9 && month <= 11) return 'autumn'
-  return 'winter'
+  const month = new Date().getMonth() + 1; // 1月=1
+  if (month >= 3 && month <= 5) return 'spring';
+  if (month >= 6 && month <= 8) return 'summer';
+  if (month >= 9 && month <= 11) return 'autumn';
+  return 'winter';
 }
 
 // 季節ごとの草色マップ（data-level 0~4）
@@ -40,15 +40,14 @@ export const seasonGrassColors: Record<Season, Record<number, string>> = {
     3: '#bfbfbf',
     4: '#808080',
   },
-}
+};
 
 // 月ごとの草色マップ（イベント優先）
-export type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+export type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 export const monthGrassColors: Record<Month, Record<number, string>> = {
   1: seasonGrassColors.winter, // 冬
   2: {
-    // バレンタイン
     0: '#ebedf0', // 背景
     1: '#f5e1d0', // 薄ミルクチョコ
     2: '#d2a679', // ミルクチョコ
@@ -56,12 +55,11 @@ export const monthGrassColors: Record<Month, Record<number, string>> = {
     4: '#5c3a21', // ビターチョコ
   },
   3: {
-    // ひな祭り・ホワイトデー
-    0: "#ebedf0",
-    1: "#fff0f5",
-    2: "#ffccdd",
-    3: "#ff99bb",
-    4: "#ff66aa",
+    0: '#fff0f5', // 背景（薄いピンク）
+    1: '#fbe1eb', // 雛霰の白
+    2: '#f0a9c1', // 明るいピンク
+    3: '#f5c68c', // 明るい黄色（雛霰の黄色）
+    4: '#ff66b2', // 濃いピンク
   },
   4: seasonGrassColors.spring,
   5: seasonGrassColors.spring,
@@ -70,7 +68,6 @@ export const monthGrassColors: Record<Month, Record<number, string>> = {
   8: seasonGrassColors.summer,
   9: seasonGrassColors.autumn,
   10: {
-    // ハロウィン
     0: '#ebedf0',
     1: '#ffebcd',
     2: '#ffdead',
@@ -79,23 +76,56 @@ export const monthGrassColors: Record<Month, Record<number, string>> = {
   },
   11: seasonGrassColors.autumn,
   12: {
-    // クリスマス
-    0: '#ebedf0',
-    1: '#e6f7ff',
-    2: '#99d6ff',
-    3: '#33b3ff',
-    4: '#007acc',
+    0: '#f0f8ff', // 雪のような白または淡い青（背景）
+    1: '#ffcccc', // 薄い赤（サンタクロースの赤）
+    2: '#66cc66', // クリスマスツリーの緑
+    3: '#b30000', // クリスマスレッド（深い赤）
+    4: '#006400', // クリスマスグリーン（深い緑）
   },
+};
+
+// 月と日付でカラーを取得する関数（イベント期間優先）
+export function getGrassColorsByMonthAndDate(month?: number, day?: number): Record<number, string> {
+  const m = month ?? new Date().getMonth() + 1;
+  const d = day ?? new Date().getDate();
+
+  // バレンタイン（2月10日〜14日）
+  if (m === 2 && d >= 10 && d <= 14) {
+    return monthGrassColors[2]; // バレンタインカラーを返す
+  }
+
+  // ひな祭り（3月3日〜15日）
+  if (m === 3 && d >= 3 && d <= 15) {
+    return monthGrassColors[3]; // ひな祭りカラーを返す
+  }
+
+  // ハロウィン（10月31日〜11月1日）
+  if (m === 10 && (d === 31 || d === 1)) {
+    return monthGrassColors[10]; // ハロウィンカラーを返す
+  }
+
+  // クリスマス（12月15日〜25日）
+  if (m === 12 && d >= 15 && d <= 25) {
+    return monthGrassColors[12]; // クリスマスカラーを返す
+  }
+
+  // それ以外は季節カラー
+  return getGrassColorsBySeason(); // 季節カラーを返す
 }
 
-// 月からカラーを取得する関数（イベント優先）
+// 月ごとのカラーを取得する関数（イベント優先）
 export function getGrassColorsByMonth(month?: number): Record<number, string> {
-  const m = month ?? new Date().getMonth() + 1
-  return monthGrassColors[m as Month]
+  const m = month ?? new Date().getMonth() + 1;
+
+  // 月のカラーを優先
+  const eventColors = monthGrassColors[m as Month];
+
+  // イベントカラーがない場合は季節カラーを返す
+  return eventColors || getGrassColorsBySeason();
 }
 
 // 現在の季節のカラーを取得する関数（季節カラー）
 export function getGrassColorsBySeason(): Record<number, string> {
-  const season = getSeason()
-  return seasonGrassColors[season]
+  const season = getSeason();
+  return seasonGrassColors[season]; // 季節カラーを返す
 }

@@ -1,10 +1,9 @@
-import { getSeason, seasonGrassColors } from "../utils/season";
+import { getGrassColorsByMonthAndDate } from "../utils/season";
 
 console.log("🌿 GitHub Grass Color Changer loaded!");
 
-// 現在の季節を取得
-const currentSeason = getSeason();
-const seasonLevels = seasonGrassColors[currentSeason];
+// 現在の日付に応じた色を取得（イベント優先）
+const grassColors = getGrassColorsByMonthAndDate();
 
 function recolorGrass(): boolean {
   const days = document.querySelectorAll('td.ContributionCalendar-day');
@@ -16,14 +15,15 @@ function recolorGrass(): boolean {
   let count = 0;
   days.forEach((day) => {
     const level = parseInt(day.getAttribute('data-level') ?? "0", 10);
-    if (level > 0) {
-      const color: string = seasonLevels[level] ?? seasonLevels[0]!;
+    if (level >= 0) {
+      const color: string = grassColors[level] ?? grassColors[0]!;
       (day as HTMLElement).style.backgroundColor = color;
       count++;
     }
   });
 
-  console.log(`🌱 ${count} 個の草を ${currentSeason} カラーにしました！`);
+  const today = new Date();
+  console.log(`🌱 ${count} 個の草を ${today.getMonth() + 1}/${today.getDate()} カラーにしました！`);
   return true;
 }
 
