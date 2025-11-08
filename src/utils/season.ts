@@ -94,8 +94,8 @@ export function getGrassColorsByMonthAndDate(month?: number, day?: number): Reco
     return monthGrassColors[2]; // バレンタインカラーを返す
   }
 
-  // ひな祭り（3月3日〜15日）
-  if (m === 3 && d >= 3 && d <= 15) {
+  // ひな祭り（3月3日〜7日）
+  if (m === 3 && d >= 3 && d <= 7) {
     return monthGrassColors[3]; // ひな祭りカラーを返す
   }
 
