@@ -8,11 +8,10 @@ export function createButtonSet(): void {
 
   // 画像（農夫さん）の設定
   const farmerImg = document.createElement('img');
-  farmerImg.src = '/images/farmer.png'; // 画像のパスを指定
+  farmerImg.src = chrome.runtime.getURL('images/farmer.png'); // 拡張の画像を参照
   farmerImg.alt = 'Farmer';
-  farmerImg.style.width = '50px'; // 画像のサイズ
-  farmerImg.style.height = '50px';
-  farmerImg.style.marginRight = '20px'; // 画像とボタンの間隔を設定
+  farmerImg.style.width = '100px'; // 画像のサイズ
+  farmerImg.style.height = '100px';
 
   // バッジボタン作成（badge と type のボタン）
   const badgeButton = createButton('Grass Badge', 'https://my-grass-garden-front.vercel.app/', 'badge');
@@ -50,6 +49,7 @@ function createButton(text: string, link: string, buttonType: 'badge' | 'type'):
 
   // ボタンのスタイル設定
   button.style.padding = '12px 30px';
+  button.style.margin = '0 5px';
   button.style.fontSize = '18px';
   button.style.fontWeight = 'bold';
   button.style.cursor = 'pointer';
