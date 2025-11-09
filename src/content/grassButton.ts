@@ -54,7 +54,7 @@ function createButton(text: string, link: string, buttonType: 'badge' | 'type'):
   button.style.fontWeight = 'bold';
   button.style.cursor = 'pointer';
   button.style.border = '2px solid transparent';
-  button.style.borderRadius = '50px';
+  button.style.borderRadius = '10px';
   button.style.backgroundColor = buttonColor;
   button.style.color = '#fff';
   button.style.transition = 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out';
