@@ -10,9 +10,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        content: path.resolve(__dirname, 'src/content/grassColor.ts'),
-        cow: path.resolve(__dirname, 'src/content/cow.ts'),
-        effects: path.resolve(__dirname, 'src/content/effects.ts'),
+        content: path.resolve(__dirname, 'src/content/content.ts'),
       },
       output: {
         entryFileNames: '[name].js',

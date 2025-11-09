@@ -113,7 +113,7 @@ function getGrassColorsBySeason() {
 }
 
 // レベルごとの色を取得する関数（統一されたロジック）
-export function getGrassColorByLevel(level: number) {
+function getGrassColorByLevel(level: number) {
   const grassColors = getGrassColorsByMonthAndDate() as { [key: number]: string };
 
   // NaN や範囲外の値を扱う（0〜4 にクランプ）
