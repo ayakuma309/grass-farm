@@ -1,4 +1,5 @@
-// 季節の型
+// src/utils/season.ts
+
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
 // 月の型（1から12の整数）
@@ -34,11 +35,11 @@ const seasonGrassColors = {
     3: "#bfbfbf",
     4: "#808080",
   },
-} as const; // "as const"を使って、オブジェクトのプロパティを定数にする
+} as const;
 
 // 現在の季節を判定する関数
 function getSeason(): Season {
-  const month = new Date().getMonth() + 1; // 1月=1
+  const month = new Date().getMonth() + 1;
   if (month >= 3 && month <= 5) return "spring";
   if (month >= 6 && month <= 8) return "summer";
   if (month >= 9 && month <= 11) return "autumn";
@@ -47,20 +48,20 @@ function getSeason(): Season {
 
 // 月ごとの草色マップ（イベント優先）
 const monthGrassColors: Record<Month, { [key: number]: string }> = {
-  1: seasonGrassColors.winter, // 冬
+  1: seasonGrassColors.winter,
   2: {
-    0: "#ebedf0", // 背景
-    1: "#f5e1d0", // 薄ミルクチョコ
-    2: "#d2a679", // ミルクチョコ
-    3: "#a56b46", // ダークチョコ
-    4: "#5c3a21", // ビターチョコ
+    0: "#ebedf0",
+    1: "#f5e1d0",
+    2: "#d2a679",
+    3: "#a56b46",
+    4: "#5c3a21",
   },
   3: {
-    0: "#fff0f5", // 背景（薄いピンク）
-    1: "#fbe1eb", // 雛霰の白
-    2: "#f0a9c1", // 明るいピンク
-    3: "#f5c68c", // 明るい黄色（雛霰の黄色）
-    4: "#ff66b2", // 濃いピンク
+    0: "#fff0f5",
+    1: "#fbe1eb",
+    2: "#f0a9c1",
+    3: "#f5c68c",
+    4: "#ff66b2",
   },
   4: seasonGrassColors.spring,
   5: seasonGrassColors.spring,
@@ -77,17 +78,17 @@ const monthGrassColors: Record<Month, { [key: number]: string }> = {
   },
   11: seasonGrassColors.autumn,
   12: {
-    0: "#f0f8ff", // 雪のような白または淡い青（背景）
-    1: "#ffcccc", // 薄い赤（サンタクロースの赤）
-    2: "#66cc66", // クリスマスツリーの緑
-    3: "#b30000", // クリスマスレッド（深い赤）
-    4: "#006400", // クリスマスグリーン（深い緑）
+    0: "#f0f8ff",
+    1: "#ffcccc",
+    2: "#66cc66",
+    3: "#b30000",
+    4: "#006400",
   },
 };
 
 // 月と日付でカラーを取得する関数（イベント期間優先）
 export function getGrassColorsByMonthAndDate(month?: Month, day?: number) {
-  const m = month ?? new Date().getMonth() + 1;
+  const m = (month ?? new Date().getMonth() + 1) as Month;
   const d = day ?? new Date().getDate();
 
   // バレンタイン（2月10日〜14日）
@@ -109,47 +110,20 @@ export function getGrassColorsByMonthAndDate(month?: Month, day?: number) {
 // 現在の季節のカラーを取得する関数（季節カラー）
 function getGrassColorsBySeason() {
   const season = getSeason();
-  return seasonGrassColors[season]; // 季節カラーを返す
+  return seasonGrassColors[season];
 }
 
-// レベルごとの色を取得する関数
+// レベルごとの色を取得する関数（統一されたロジック）
 export function getGrassColorByLevel(level: number) {
-  const grassColors = getGrassColorsByMonthAndDate(); // 月と日付に基づく色
+  const grassColors = getGrassColorsByMonthAndDate() as { [key: number]: string };
 
   // NaN や範囲外の値を扱う（0〜4 にクランプ）
-  if (isNaN(level) || level < 0 || level > 4) {
-    console.warn(`⚠️ 無効なレベル: ${level}（0〜4 の範囲で指定してください）`);
-    return grassColors[0] ?? "#ebedf0"; // レベルが範囲外または無効な場合はデフォルト色
+  if (isNaN(level)) {
+    console.warn(`⚠️ 無効なレベル: ${level}（デフォルト値 0 を使用）`);
+    return grassColors[0] ?? "#ebedf0";
   }
 
-  const idx = Math.floor(level);
-  const key = (idx < 0 ? 0 : idx > 4 ? 4 : idx) as 0 | 1 | 2 | 3 | 4;
-  return grassColors[key] ?? grassColors[0] ?? "#ebedf0"; // 色が見つからない場合はデフォルト
+  // 範囲外の値をクランプ
+  const clampedLevel = Math.max(0, Math.min(4, Math.floor(level)));
+  return grassColors[clampedLevel] ?? grassColors[0] ?? "#ebedf0";
 }
-
-// 月と日付に基づいて草色を変更する処理
-function updateGrassColors() {
-  const cells = document.querySelectorAll("td.ContributionCalendar-day") as NodeListOf<HTMLTableCellElement>;
-  if (!cells.length) {
-    console.log("⏳ 草がまだ見つからないので再試行します...");
-    return false;
-  }
-
-  let updatedCount = 0;
-  cells.forEach(cell => {
-    const level = parseInt(cell.getAttribute("data-level") ?? "0", 10);
-    const color = getGrassColorByLevel(level);
-    cell.style.backgroundColor = color;
-    updatedCount++;
-  });
-
-  console.log(`🌱 ${updatedCount} 個の草を色付けしました！`);
-  return updatedCount > 0;
-}
-
-// 1秒ごとに草色を更新
-const interval = setInterval(() => {
-  if (updateGrassColors()) {
-    clearInterval(interval);
-  }
-}, 1000);
